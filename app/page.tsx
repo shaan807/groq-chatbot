@@ -199,8 +199,9 @@ export default function ChatPage() {
   }, [input]);
 
   const toggleMic = useCallback(() => {
-    const SR = (window as typeof window & { SpeechRecognition?: typeof SpeechRecognition; webkitSpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition
-      || (window as typeof window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any;
+    const SR = w.SpeechRecognition || w.webkitSpeechRecognition;
 
     if (!SR) {
       alert("Speech recognition is not supported in this browser. Try Chrome or Edge.");
