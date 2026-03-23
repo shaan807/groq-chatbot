@@ -1,8 +1,6 @@
 import Groq from "groq-sdk";
 import { NextRequest } from "next/server";
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
 export const runtime = "edge";
 
 interface Message {
@@ -18,6 +16,7 @@ interface ContentPart {
 
 export async function POST(req: NextRequest) {
   try {
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
     const { messages, imageBase64, imageMimeType } = await req.json();
 
     // Build the messages array for Groq
