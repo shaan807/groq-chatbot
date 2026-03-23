@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
-import { Send, X, Bot, User, Loader2, Paperclip, Sun, Moon } from "lucide-react";
+import { Send, X, User, Loader2, Paperclip, Sun, Moon, Mic, MicOff } from "lucide-react";
 
 interface Message {
   id: string;
@@ -29,6 +29,8 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [dark, setDark] = useState(true);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -195,6 +197,42 @@ export default function ChatPage() {
     ta.style.height = Math.min(ta.scrollHeight, 160) + "px";
   }, [input]);
 
+  const toggleMic = useCallback(() => {
+    const SR = (window as typeof window & { SpeechRecognition?: typeof SpeechRecognition; webkitSpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition
+      || (window as typeof window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition;
+
+    if (!SR) {
+      alert("Speech recognition is not supported in this browser. Try Chrome or Edge.");
+      return;
+    }
+
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+
+    const recognition = new SR();
+    recognition.lang = "en-US";
+    recognition.interimResults = true;
+    recognition.continuous = false;
+    recognitionRef.current = recognition;
+
+    recognition.onstart = () => setListening(true);
+    recognition.onend = () => setListening(false);
+    recognition.onerror = () => setListening(false);
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      setInput(transcript);
+    };
+
+    recognition.start();
+  }, [listening]);
+
   const fileIcon = (type?: "image" | "pdf" | "doc") => {
     if (type === "pdf") return "PDF";
     if (type === "doc") return "DOC";
@@ -338,6 +376,21 @@ export default function ChatPage() {
             onChange={handleFileSelect}
           />
 
+          <button
+            onClick={toggleMic}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors flex-shrink-0 mb-0.5 ${
+              listening
+                ? "bg-[#f38ba8] hover:bg-[#f38ba8]/80"
+                : t.btn
+            }`}
+            title={listening ? "Stop recording" : "Speak to type"}
+          >
+            {listening
+              ? <MicOff size={17} className="text-white animate-pulse" />
+              : <Mic size={17} className={t.btnIcon} />
+            }
+          </button>
+
           <textarea
             ref={textareaRef}
             value={input}
@@ -357,7 +410,7 @@ export default function ChatPage() {
           </button>
         </div>
         <p className={`text-[10px] text-center mt-2 ${t.footer}`}>
-          Supports images · PDFs · Word docs · Zam can make mistakes
+          Supports images · PDFs · Word docs · Voice input · Zam can make mistakes
         </p>
       </div>
     </div>
