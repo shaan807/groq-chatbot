@@ -1,48 +1,60 @@
-# AI Chatbot — Free Forever
+# Zam
 
-A modern AI chatbot with image support, powered by **Groq** (free) + **Llama 4 Scout** (vision model).
+A free AI chatbot powered by Groq and Llama 4. Supports text, images, PDFs, and Word documents.
+
+Live at [zam-ai.vercel.app](https://zam-ai.vercel.app)
+
+---
 
 ## Features
-- 💬 Streaming chat responses
-- 🖼️ Image input (vision model)
-- 🌙 Dark theme UI
-- 📱 Mobile responsive
-- ⚡ Edge runtime — blazing fast
 
-## Deploy to Vercel (Free)
+- Streaming chat responses
+- Image understanding (vision model)
+- PDF and DOCX file reading
+- Dark theme UI
+- Mobile responsive
+- Edge runtime
 
-### Step 1 — Get Groq API Key
-1. Go to [console.groq.com](https://console.groq.com)
-2. Sign up (free, no credit card)
-3. Create an API key
+---
 
-### Step 2 — Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+## Stack
 
-1. Push this repo to GitHub
-2. Go to [vercel.com](https://vercel.com) → New Project → Import your repo
-3. Add environment variable:
-   - Key: `GROQ_API_KEY`
-   - Value: your key from Step 1
-4. Click Deploy — done!
+- Next.js 14 (App Router)
+- Groq SDK — Llama 4 Scout (vision model)
+- Tailwind CSS
+- React Markdown
+- pdfjs-dist (PDF parsing)
+- mammoth (DOCX parsing)
 
-## Local Development
+---
+
+## Self-hosting
+
+### 1. Get a Groq API key
+
+Sign up at [console.groq.com](https://console.groq.com). Free, no credit card required.
+
+### 2. Clone and run locally
 
 ```bash
+git clone https://github.com/shaan807/groq-chatbot.git
+cd groq-chatbot
 cp .env.local.example .env.local
 # Add your GROQ_API_KEY to .env.local
-
 npm install
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
 
-## Stack
-- Next.js 14 (App Router)
-- Groq SDK (Llama 4 Scout — vision model)
-- Tailwind CSS
-- React Markdown
+### 3. Deploy to Vercel
 
-## Rate Limits (Free Tier)
-Groq free tier: 30 req/min, 14,400 req/day — more than enough for personal use.
+1. Import the repo at [vercel.com/new](https://vercel.com/new)
+2. Add environment variable: `GROQ_API_KEY`
+3. Deploy
+
+---
+
+## Rate limits (free tier)
+
+Groq free tier allows 30 requests per minute and 14,400 requests per day. Sufficient for personal use.
