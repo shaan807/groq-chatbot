@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AI Chat",
-  description: "Free AI chatbot powered by Groq + Llama 4",
+  title: "Zam",
+  description: "Zam — AI chat powered by Groq + Llama 4. Supports text, images, PDFs and docs.",
 };
 
 export default function RootLayout({
